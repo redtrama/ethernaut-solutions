@@ -11,4 +11,5 @@ docs/
 
 # Dotenv file
 .env
-contracts/out/
+
+out/
