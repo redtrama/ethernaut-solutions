@@ -112,10 +112,10 @@ contract ECLocker {
 
     function _isValidSignature(uint8 v, bytes32 r, bytes32 s) internal returns (address) {
         address _address = ecrecover(msgHash, v, r, s);
-        require (_address == controller, InvalidController());
+        require(_address == controller, InvalidController());
 
         bytes32 signatureHash = keccak256(abi.encode([uint256(r), uint256(s), uint256(v)]));
-        require (!usedSignatures[signatureHash], SignatureAlreadyUsed());
+        require(!usedSignatures[signatureHash], SignatureAlreadyUsed());
 
         usedSignatures[signatureHash] = true;
 

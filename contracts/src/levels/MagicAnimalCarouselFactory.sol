@@ -18,7 +18,7 @@ contract MagicAnimalCarouselFactory is Level {
         // Store a goat in the box
         string memory goat = "Goat";
         instance.setAnimalAndSpin(goat);
-        
+
         // Goat should be mutated
         uint256 currentCrateId = instance.currentCrateId();
         uint256 animalInBox = instance.carousel(currentCrateId) >> 176;

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.28;
 
 contract MagicAnimalCarousel {
-    uint16 constant public MAX_CAPACITY = type(uint16).max;
+    uint16 public constant MAX_CAPACITY = type(uint16).max;
     uint256 constant ANIMAL_MASK = uint256(type(uint80).max) << 160 + 16;
     uint256 constant NEXT_ID_MASK = uint256(type(uint16).max) << 160;
     uint256 constant OWNER_MASK = uint256(type(uint160).max);
@@ -31,7 +31,7 @@ contract MagicAnimalCarousel {
     function changeAnimal(string calldata animal, uint256 crateId) external {
         uint256 crate = carousel[crateId];
         require(crate != 0, CrateNotInitialized());
-        
+
         address owner = address(uint160(crate & OWNER_MASK));
         if (owner != address(0)) {
             require(msg.sender == owner);
@@ -39,11 +39,10 @@ contract MagicAnimalCarousel {
         uint256 encodedAnimal = encodeAnimalName(animal);
         if (encodedAnimal != 0) {
             // Replace animal
-            carousel[crateId] =
-                (encodedAnimal << 160) | (carousel[crateId] & NEXT_ID_MASK) | uint160(msg.sender); 
+            carousel[crateId] = (encodedAnimal << 160) | (carousel[crateId] & NEXT_ID_MASK) | uint160(msg.sender);
         } else {
             // If no animal specified keep same animal but clear owner slot
-            carousel[crateId]= (carousel[crateId] & (ANIMAL_MASK | NEXT_ID_MASK));
+            carousel[crateId] = (carousel[crateId] & (ANIMAL_MASK | NEXT_ID_MASK));
         }
     }
 
