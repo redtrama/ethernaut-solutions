@@ -11,7 +11,7 @@ import {Ethernaut} from "src/Ethernaut.sol";
 interface Token {
     function transfer(address, uint256) external returns (bool);
 
-    function balanceOf(address) external view returns (uint);
+    function balanceOf(address) external view returns (uint256);
 }
 
 contract TestTokenSolution is Test, Utils {
@@ -64,7 +64,7 @@ contract TestTokenSolution is Test, Utils {
         // - hack the Token.sol contract
 
         // solution:
-        // token contract is using a solidity version which is < 0.8.0 
+        // token contract is using a solidity version which is < 0.8.0
         // any solidity < 0.8.0 allows variables to over/underflow without reverting
         // for solving this we can transfer 1 more token than we own so our balance can be underflow and return type(uint256).max
 
@@ -78,6 +78,6 @@ contract TestTokenSolution is Test, Utils {
         // after overflow this will return type(unit256).max
         console.log(instance.balanceOf(player));
 
-        assertGt(instance.balanceOf(player) , 20);
+        assertGt(instance.balanceOf(player), 20);
     }
 }
