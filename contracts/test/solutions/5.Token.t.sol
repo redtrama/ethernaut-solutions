@@ -44,7 +44,9 @@ contract TestTokenSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Token(payable(createLevelInstance(ethernaut, Level(address(factory)), 0)));
+        instance = Token(
+            payable(createLevelInstance(ethernaut, Level(address(factory)), 0))
+        );
         vm.stopPrank();
     }
 

@@ -36,7 +36,15 @@ contract TestVaultSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Vault(payable(createLevelInstance(ethernaut, Level(address(factory)), 0.001 ether)));
+        instance = Vault(
+            payable(
+                createLevelInstance(
+                    ethernaut,
+                    Level(address(factory)),
+                    0.001 ether
+                )
+            )
+        );
         vm.stopPrank();
     }
 
@@ -50,19 +58,18 @@ contract TestVaultSolution is Test, Utils {
         assertFalse(submitLevelInstance(ethernaut, address(instance)));
     }
 
-
     /// @notice Test the solution for the level.
     function testSolve() public {
         // goal: unlock the vault (bool unlock = true)
 
-        // the variable in the second slot is bytes32 private password 
+        // the variable in the second slot is bytes32 private password
         // making a variable private doesn't mean that it will be private, we can see what's stored on the slot
         // and then just call unlock with that value
 
         //check that locked is true before attack
         assert(instance.locked() == true);
 
-        // we need to read the second storage slot 1 
+        // we need to read the second storage slot 1
         bytes32 slot1 = vm.load(address(instance), bytes32(uint256(1)));
 
         // bytes32 password = bytes32(0x412076657279207374726f6e67207365637265742070617373776f7264203a29);

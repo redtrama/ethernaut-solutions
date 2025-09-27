@@ -49,7 +49,9 @@ contract TestForceSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Force(payable(createLevelInstance(ethernaut, Level(address(factory)), 0)));
+        instance = Force(
+            payable(createLevelInstance(ethernaut, Level(address(factory)), 0))
+        );
         forceAttack = new ForceAttack();
         vm.stopPrank();
     }

